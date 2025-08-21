@@ -1,22 +1,47 @@
 {% extends 'base.html' %}
-
+{% block title %}Registro{% endblock %}
 {% block content %}
   <h2>{{ title }}</h2>
   <form method="post">
     {% csrf_token %}
-    
-    {# Renderiza todos los campos EXCEPTO el CAPTCHA #}
-    {{ form.as_p }}  
 
-    {# Ahora agregamos el CAPTCHA manualmente #}
-    <div class="captcha-field">
-      {% if form.captcha.errors %}
-        <div class="error">{{ form.captcha.errors }}</div>
-      {% endif %}
+    {{ form.username.label_tag }}
+    {{ form.username }}
+    {{ form.username.errors }}
+
+    {{ form.email.label_tag }}
+    {{ form.email }}
+    {{ form.email.errors }}
+
+    {{ form.password1.label_tag }}
+    {{ form.password1 }}
+    {{ form.password1.errors }}
+
+    {{ form.password2.label_tag }}
+    {{ form.password2 }}
+    {{ form.password2.errors }}
+
+  
+   <!-- CAPTCHA -->
+<div class="mb-4">
+  <label for="id_captcha" class="form-label">{{ form.captcha.label }}</label>
+  <div class="captcha-wrapper d-flex justify-content-center align-items-center gap-3 flex-wrap">
+    <div class="captcha-image">
+      {{ form.captcha.image }}
     </div>
+    <div class="captcha-input">
+      {{ form.captcha }}
+    </div>
+  </div>
+  {% if form.captcha.errors %}
+    <div class="text-danger mt-2 text-center">{{ form.captcha.errors }}</div>
+  {% endif %}
+</div>
+
+
 
     {% if form.errors %}
-      <div class="alert alert-danger">
+      <div class="alert alert-danger mt-3">
         {% for field, errors in form.errors.items %}
           {% for error in errors %}
             <p>{{ error }}</p>
@@ -25,7 +50,12 @@
       </div>
     {% endif %}
 
-    <button type="submit">Sign Up</button>
-    <p>Ya tienes una cuenta? <a href="{% url 'accounts:login' %}">Log in</a></p>
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary">Registrarse</button>
+    </div>
+
+    <p class="text-center mt-3">
+      ¿Ya tenés una cuenta? <a href="{% url 'accounts:login' %}">Ingresar</a>
+    </p>
   </form>
 {% endblock %}

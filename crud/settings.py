@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'persona',
     'oficina',
     'accounts',
-    #'captcha',    
+    'captcha',    
 ]
 
 MIDDLEWARE = [
