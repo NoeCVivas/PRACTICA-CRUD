@@ -14,17 +14,29 @@
             <strong>MI PANEL</strong>
         </a>
         
-        <!-- Barra de búsqueda CENTRAL y más grande -->
+        <!-- Barra de búsqueda CENTRAL y más grande - MODIFICADA -->
         <div class="navbar-search-container">
-            <form class="d-flex" method="get" action="{% url 'persona:buscar' %}">
+            <div class="d-flex">
                 <div class="input-group input-group-lg">
+                    <select class="form-select search-type-select" id="searchType" style="
+                        border-radius: 25px 0 0 25px;
+                        border: none;
+                        background: rgba(255, 255, 255, 0.1);
+                        color: #fff;
+                        padding: 0.8rem 1rem;
+                        width: auto;
+                    ">
+                        <option value="persona">Personas</option>
+                        <option value="oficina">Oficinas</option>
+                    </select>
                     <input class="form-control search-input" type="search" 
-                           placeholder="Buscar personas, oficinas..." aria-label="Search" name="q">
-                    <button class="btn btn-search" type="submit">
+                           placeholder="Buscar..." aria-label="Search" id="searchQuery"
+                           style="border-left: 1px solid rgba(255,255,255,0.2);">
+                    <button class="btn btn-search" type="button" id="searchButton">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
         
         <!-- Botón para menú colapsable en móviles -->
@@ -36,6 +48,10 @@
         <div class="collapse navbar-collapse" id="navbarContent">
             <!-- Elementos a la izquierda -->
             <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+                 </li>
+
                 <!-- Dropdown de Personas -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="personaDropdown" role="button" 
@@ -96,7 +112,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle user-greeting" href="#" id="userDropdown" role="button" 
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle me-1"></i> Hola, Noelia
+                        <i class="fas fa-user-circle me-1"></i> Hola, {{ user.username }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="#">
@@ -188,8 +204,8 @@
         margin: 0 2rem;
     }
     .search-input {
-        width: 400px !important;
-        border-radius: 25px 0 0 25px !important;
+        width: 300px !important;
+        border-radius: 0 !important;
         border: none;
         background: rgba(255, 255, 255, 0.1);
         color: #fff;
@@ -200,8 +216,15 @@
     }
     .search-input:focus {
         background: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 0 0.2rem rgba(155, 89, 182, 0.25);
+        box-shadow: none;
         color: #fff;
+    }
+    .search-type-select {
+        width: auto !important;
+    }
+    .search-type-select:focus {
+        box-shadow: none;
+        border-color: transparent;
     }
     .btn-search {
         border-radius: 0 25px 25px 0 !important;
@@ -228,3 +251,39 @@
         }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchButton');
+    const searchType = document.getElementById('searchType');
+    const searchQuery = document.getElementById('searchQuery');
+    
+    searchButton.addEventListener('click', function() {
+        performSearch();
+    });
+    
+    searchQuery.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+    
+    function performSearch() {
+        const type = searchType.value;
+        const query = searchQuery.value.trim();
+        
+        if (query === '') {
+            return;
+        }
+        
+        let searchUrl;
+        if (type === 'persona') {
+            searchUrl = "{% url 'persona:buscar' %}?q=" + encodeURIComponent(query);
+        } else if (type === 'oficina') {
+            searchUrl = "{% url 'oficina:buscar' %}?q=" + encodeURIComponent(query);
+        }
+        
+        window.location.href = searchUrl;
+    }
+});
+</script>
