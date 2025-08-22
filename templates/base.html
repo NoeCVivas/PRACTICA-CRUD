@@ -38,6 +38,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 2rem;
     }
 
     .contenido {
@@ -46,7 +47,7 @@
       border-radius: 0.5rem;
       box-shadow: 0 0 15px rgba(0,0,0,0.05);
       width: 100%;
-      max-width: 600px;
+      max-width: 700px;
     }
 
     h2 {
@@ -68,6 +69,7 @@
 
     .btn {
       font-weight: 500;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .btn-primary {
@@ -80,33 +82,7 @@
       border-color: var(--azul-claro);
     }
 
-    .btn-secondary {
-      background-color: #6c757d;
-      border-color: #6c757d;
-    }
-
-    .btn-secondary:hover {
-      background-color: #5a6268;
-      border-color: #545b62;
-    }
-
-    .navbar {
-      background-color: var(--azul-oscuro);
-    }
-
-    .navbar .nav-link,
-    .navbar .navbar-brand,
-    .navbar .navbar-text {
-      color: #ffffff !important;
-      font-weight: 500;
-    }
-
-    .navbar .btn-outline-light {
-      border-color: #ffffff;
-      color: #ffffff;
-    }
-
-    .navbar .btn-outline-light:hover {
+    .btn-outline-light:hover {
       background-color: #ffffff;
       color: var(--azul-oscuro);
     }
@@ -118,34 +94,22 @@
       text-align: center;
       padding: 1rem 0;
     }
-    .captcha-wrapper {
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d0d7de;
-  box-shadow: 0 0 5px rgba(0,0,0,0.05);
-  max-width: 400px;
-  margin: 0 auto;
-}
 
-.captcha-image img {
-  border-radius: 0.25rem;
-  border: 1px solid #ced4da;
-}
+    .pagination .page-link {
+      color: var(--azul-oscuro);
+    }
 
-.captcha-input input {
-  border: 1px solid #ced4da;
-  border-radius: 0.3rem;
-  padding: 0.4rem 0.6rem;
-  width: 120px;
-}
-
+    .pagination .page-item.active .page-link {
+      background-color: var(--azul-oscuro);
+      border-color: var(--azul-oscuro);
+      color: #fff;
+    }
   </style>
 </head>
 
 <body>
- 
-  <!-- Contenido centrado -->
+  {% include 'includes/navbar.html' %}
+
   <main>
     <div class="contenido">
       {% block content %}
@@ -153,7 +117,6 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <footer>
     <div class="container">
       <p class="mb-0">© 2025 Mi Panel de Gestión — Desarrollado por Noelia</p>

@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from .models import Persona
 from django.db.models import Q  
-# Import login mixin if needed
+from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -11,7 +11,7 @@ class PersonaListView(ListView):
     model = Persona
     template_name = 'persona/lista.html'
     context_object_name = 'personas'
-    paginate_by = 2  
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,6 +55,7 @@ class PersonaDetailView(DetailView):
         context['titulo'] = "Detalle de Personas"
         context['home_url'] = 'persona:lista'
         return context
+
 class PersonaCreateView(LoginRequiredMixin, CreateView):
     model = Persona
     template_name = 'persona/crear.html'
@@ -89,3 +90,11 @@ class PersonaDeleteView(LoginRequiredMixin, DeleteView):
         context['confirm_message'] = "¿Estás seguro de que quieres eliminar esta persona?"  
         context['cancel_url'] = reverse_lazy('persona:lista')
         return context
+    
+    
+    def lista_personas(request):
+        personas = Persona.objects.all().order_by('apellido')
+        paginator = Paginator(personas, 10)  # 10 por página
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'persona/lista.html', {'page_obj': page_obj})

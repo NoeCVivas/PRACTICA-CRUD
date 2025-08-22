@@ -5,6 +5,7 @@ from .models import Oficina  # Assuming Persona is defined in the same app
 from persona.models import Persona  # Importa el modelo Persona
 from django.db.models import Q 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -12,7 +13,7 @@ class OficinaListView(ListView):
     model = Oficina
     template_name = 'oficina/lista.html'
     context_object_name = 'oficinas'
-    paginate_by = 2  # Número de oficinas por página
+    paginate_by = 4  
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -101,3 +102,10 @@ class OficinaDeleteView(LoginRequiredMixin, DeleteView):
         context['confirm_message'] = "¿Estás seguro de que quieres eliminar esta oficina?"  
         context['cancel_url'] = reverse_lazy('oficina:lista')
         return context
+    
+    def lista_personas(request):
+        personas = Persona.objects.all().order_by('apellido')
+        paginator = Paginator(personas, 10)  # 10 por página
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'persona/lista.html', {'page_obj': page_obj})
