@@ -5,6 +5,7 @@ from .models import Persona
 from django.db.models import Q  
 from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
+from . import views
 
 
 class PersonaListView(ListView):
@@ -98,3 +99,9 @@ class PersonaDeleteView(LoginRequiredMixin, DeleteView):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         return render(request, 'persona/lista.html', {'page_obj': page_obj})
+    
+class PersonaUpdateView(UpdateView):
+    model = Persona
+    fields = ['nombre', 'apellido', 'email']  
+    template_name = 'persona/modificar.html'
+    success_url = '/persona/lista/'  

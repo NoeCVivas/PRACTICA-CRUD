@@ -1,30 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}Lista de Personas{% endblock %}
 {% block content %}
-  <h2>Personas</h2>
-  <ul class="list-group">
-    {% for persona in page_obj %}
-      <li class="list-group-item">{{ persona.nombre }} {{ persona.apellido }}</li>
-    {% empty %}
-      <li class="list-group-item">No hay personas registradas.</li>
-    {% endfor %}
-  </ul>
-
-  <nav class="mt-4">
-    <ul class="pagination justify-content-center">
-      {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-        </li>
-      {% endif %}
-      <li class="page-item disabled">
-        <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-      </li>
-      {% if page_obj.has_next %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
-{% endblock %}
+<div class="container mt-4">
+    <h1 class="mb-4">{{ titulo|default:"Lista de Personas" }}</h1>
+    
+    <!-- Botón para agregar nueva persona -->
+    <div class="mb-3">
+        <a href="{% url 'persona:crear' %}" class="btn btn-success">
+            <i class="fas fa-plus-circle me-1"></i> Agregar Nueva Persona
+        </a>
+    </div>
+        
+    {% if personas %}
+    <div class="list-group">
+        {% for persona in personas %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-1">{{ persona.nombre }} {{ persona.apellido }}</h5>
+                <p class="mb-1 text-muted">{{ persona.email }}</p>
+                {% if persona.telefono %}
+                <small class="text-muted">Tel: {{ persona.telefono }}</small>
+                {% endif %}
+            </div>
+            <div class="btn-group" role="group">
+                <a href="{% url 'persona:detalle' persona.pk %}" class="btn btn-sm btn-outline-info">Ver</a>
+                <a href="{% url 'persona:modificar' persona.pk %}" class="btn btn-sm btn-outline-warning">Modificar</a>
+                <a href="{% url 'persona:eliminar' persona.pk %}" class="btn btn-sm btn-outline-danger" 
+                   onclick="return confirm('¿Estás seguro de que deseas eliminar a {{ persona.nombre }} {{ persona.apellido }}?');">
+                    Eliminar
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'paginator.html' with page_obj=page_obj %}
+    
+    {% else %}
+        <div class="alert alert-info mt-3">
+            <i class="fas fa-info-circle me-2"></i> No hay personas registradas.
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}

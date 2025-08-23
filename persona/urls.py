@@ -34,4 +34,5 @@ urlpatterns = [
         PersonaDeleteView.as_view(),
         name='eliminar'
     ),
+    path('modificar/<int:pk>/', views.PersonaUpdateView.as_view(), name='modificar'),
 ]
