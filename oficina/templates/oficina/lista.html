@@ -1,27 +1,37 @@
+
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
     <h1 class="mb-4">{{ titulo }}</h1>
+    
+    <!-- Botón para agregar nueva oficina -->
+    <div class="mb-3">
+        <a href="{% url 'oficina:crear' %}" class="btn btn-success">
+            <i class="fas fa-plus-circle me-1"></i> Agregar Nueva Oficina
+        </a>
+    </div>
         
-        {% if oficinas %}
-        <div class="list-group">
-            {% for oficina in oficinas %}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="mb-1">{{ oficina.nombre }}</h5>
-                </div>
-                <div>
-                    <a href="{% url 'oficina:detalle' oficina.pk %}" class="btn btn-sm btn-outline-success">Ver</a>
-                    <a href="{% url 'oficina:editar' oficina.pk %}" class="btn btn-sm btn-outline-success">Modificar</a>
-                    <a href="{% url 'oficina:eliminar' oficina.pk %}" class="btn btn-sm btn-outline-success">Eliminar</a>
-                </div>
+    {% if oficinas %}
+    <div class="list-group">
+        {% for oficina in oficinas %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-1">{{ oficina.nombre }}</h5>
             </div>
-            {% endfor %}
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-dark" onclick="location.href='{% url 'oficina:detalle' oficina.pk %}'">Ver</button>
+                <button type="button" class="btn btn-outline-dark" onclick="location.href='{% url 'oficina:editar' oficina.pk %}'">Modificar</button>
+                <button type="button" class="btn btn-outline-dark" onclick="if(confirm('¿Estás seguro de que deseas eliminar esta oficina?')) { location.href='{% url 'oficina:eliminar' oficina.pk %}' }">Eliminar</button>
+            </div>
         </div>
-        {% include 'paginator.html' with page_obj=page_obj %}
+        {% endfor %}
+    </div>
+    {% include 'paginator.html' with page_obj=page_obj %}
     
     {% else %}
-        <div class="alert alert-info">No hay oficinas registradas.</div>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i> No hay oficinas registradas.
+        </div>
     {% endif %}
 </div>
 {% endblock content %}
